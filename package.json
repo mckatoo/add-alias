@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "commander": "^12.1.0"
+  },
+  "name": "add-alias",
+  "module": "index.ts",
+  "version": "0.0.1",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
