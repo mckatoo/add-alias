@@ -1,4 +1,4 @@
-# add-alias
+# aliases
 
 To install dependencies:
 
