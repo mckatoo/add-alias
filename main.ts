@@ -8,7 +8,7 @@ import packageInfo from "./package.json";
 
 const app = new Command()
 app
-  .name('add-alias')
+  .name('aliases')
   .description('CLI add alias on .zshrc')
   .version(packageInfo.version)
   .requiredOption('-n, --name <string>', 'name of alias')
@@ -46,6 +46,9 @@ try {
 try {
   const alias = `alias ${name}="${command}"`
   const aliasesContent = fs.readFileSync(ALIASES_PATH).toLocaleString()
+  const lines = aliasesContent.split('\n')
+  const lastLine = lines[lines.length - 1]
+  const lastLineIsBlank = lastLine == ""
 
   execSync(`sed -i '/^$/d' ${ALIASES_PATH}`)
   if (aliasesContent.includes(`alias ${name}`, 1)) {
@@ -53,7 +56,8 @@ try {
     execSync(`sed -i '/^alias ${name}=/d' ${ALIASES_PATH}`)
   }
 
-  fs.appendFileSync(ALIASES_PATH, `${alias}`)
+  !lastLineIsBlank && fs.appendFileSync(ALIASES_PATH, "\n")
+  fs.appendFileSync(ALIASES_PATH, alias)
   execSync(alias)
 } catch (error) {
   error instanceof Error && app.error(error.message)
