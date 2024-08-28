@@ -1,22 +1,10 @@
-import { Command } from "commander"
-import packageInfo from "./package.json"
-import fs from "fs";
-import { homedir } from "os";
 import { execSync } from "child_process";
+import { Command } from "commander";
+import fs from "fs";
 import readLine from "readline-sync";
+import { ALIASES_PATH, BKP_DIR, NOW, ZSHRC_PATH } from "./envs";
+import packageInfo from "./package.json";
 
-
-const ZSHRC_PATH = `${homedir}/.zshrc`
-const ALIASES_PATH = `${homedir}/.aliases`
-
-const DATE = new Date()
-const DAY = DATE.getDate()
-const MONTH = DATE.getMonth()
-const YEAR = DATE.getFullYear()
-const HOUR = DATE.getHours()
-const MINUTE = DATE.getMinutes()
-const SECONDS = DATE.getSeconds()
-const NOW = `${DAY}-${MONTH}-${YEAR}_${HOUR}-${MINUTE}-${SECONDS}`
 
 const app = new Command()
 app
@@ -36,12 +24,11 @@ const command = flags.command
 
 !name || !command && app.help()
 
-const bkpDir = `${homedir}/bkp-zshrc`
-const bkpDirExists = fs.existsSync(bkpDir)
-!bkpDirExists && fs.mkdirSync(bkpDir)
+const bkpDirExists = fs.existsSync(BKP_DIR)
+!bkpDirExists && fs.mkdirSync(BKP_DIR)
 
 try {
-  fs.copyFileSync(ZSHRC_PATH, `${bkpDir}/zshrc_${NOW}`)
+  fs.copyFileSync(ZSHRC_PATH, `${BKP_DIR}/zshrc_${NOW}`)
 } catch (error) {
   error instanceof Error && app.error(error.message)
 }
