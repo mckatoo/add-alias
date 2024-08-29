@@ -1,6 +1,4 @@
 import { Command } from "commander";
-import fs from "fs";
-import { BKP_DIR, NOW, ZSHRC_PATH } from "./utils/envs";
 import packageInfo from "./package.json";
 import addAlias from "./src/commands/add-alias";
 import zshrcPrepare from "./utils/zshrc-prepare";

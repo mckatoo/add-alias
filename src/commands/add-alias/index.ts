@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 import type { Command } from "commander";
 import fs from "fs";
 import readLine from "readline-sync";
-import { ALIASES_PATH } from "../../../utils/envs";
+import { ALIASES_PATH, UID } from "../../../utils/envs";
 
 
 export default (app: Command) => {
@@ -27,9 +27,12 @@ export default (app: Command) => {
                     execSync(`sed -i '/^alias ${name}=/d' ${ALIASES_PATH}`)
                 }
 
-                !lastLineIsBlank && fs.appendFileSync(ALIASES_PATH, "\n")
-                !preview && fs.appendFileSync(ALIASES_PATH, alias)
-                execSync(alias)
+                if (!preview) {
+                    !lastLineIsBlank && fs.appendFileSync(ALIASES_PATH, "\n")
+                    fs.appendFileSync(ALIASES_PATH, alias)
+                }
+
+                execSync(alias, { uid: UID })
             } catch (error) {
                 error instanceof Error && app.error(error.message)
             }

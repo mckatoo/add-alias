@@ -14,3 +14,4 @@ export const SECONDS = DATE.getSeconds()
 export const NOW = `${DAY}-${MONTH}-${YEAR}_${HOUR}-${MINUTE}-${SECONDS}`
 
 export const BKP_DIR = `${homedir}/bkp-zshrc`
+export const UID = !!process.getuid ? process.getuid() : process.exit("fail on get uid")
