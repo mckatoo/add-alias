@@ -2,6 +2,7 @@ import { Command } from "commander";
 import packageInfo from "./package.json";
 import addAlias from "./src/commands/add-alias";
 import zshrcPrepare from "./utils/zshrc-prepare";
+import listAlias from "./src/commands/list-alias";
 
 
 const app = new Command()
@@ -14,5 +15,6 @@ app
   .version(packageInfo.version)
 
 addAlias(app)
+listAlias(app)
 
 app.parse()
