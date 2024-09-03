@@ -1,6 +1,6 @@
 import type { Command } from "commander";
 import fs from "fs";
-import { ALIASES_PATH } from "../../../utils/envs";
+import { ALIASES_PATH } from "src/utils/envs";
 
 
 export default (app: Command) => {

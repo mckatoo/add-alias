@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 import type { Command } from "commander";
 import fs from "fs";
 import readLine from "readline-sync";
-import { ALIASES_PATH, UID } from "../../../utils/envs";
+import { ALIASES_PATH, UID } from "src/utils/envs";
 
 
 export default (app: Command) => {

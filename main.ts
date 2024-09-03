@@ -1,8 +1,8 @@
 import { Command } from "commander";
+import addAlias from "src/commands/add-alias";
+import listAlias from "src/commands/list-alias";
+import zshrcPrepare from "src/utils/zshrc-prepare";
 import packageInfo from "./package.json";
-import addAlias from "./src/commands/add-alias";
-import zshrcPrepare from "./utils/zshrc-prepare";
-import listAlias from "./src/commands/list-alias";
 
 
 const app = new Command()
