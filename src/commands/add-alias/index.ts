@@ -22,8 +22,9 @@ export default (app: Command) => {
                 const lastLineIsBlank = lastLine == ""
 
                 execSync(`sed -i '/^$/d' ${ALIASES_PATH}`)
-                if (aliasesContent.includes(`alias ${name}`) && !preview) {
-                    !readLine.keyInYN('This alias already exists. Do you want to update?') && app.exitOverride()
+                if (aliasesContent.includes(`alias ${name}=`) && !preview) {
+                    const update = readLine.keyInYN('This alias already exists. Do you want to update?') 
+                    if(!update) process.exit()
                     execSync(`sed -i '/^alias ${name}=/d' ${ALIASES_PATH}`)
                 }
 
