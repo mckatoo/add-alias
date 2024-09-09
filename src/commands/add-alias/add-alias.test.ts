@@ -3,15 +3,17 @@ import { Command } from "commander";
 import addAlias from ".";
 import fs from "fs";
 import child_process from "child_process"
+import { ALIASES_PATH, UID } from "src/utils/envs";
 
+
+const readFileSyncSpy = spyOn(fs, 'readFileSync')
+const appendFileSyncSpy = spyOn(fs, 'appendFileSync')
+const execSyncSpy = spyOn(child_process, 'execSync')
 
 describe("Add alias", () => {
     beforeAll(() => {
-        const readFileSyncSpy = spyOn(fs, 'readFileSync')
         readFileSyncSpy.mockImplementation(jest.fn().mockReturnValue(''))
-        const appendFileSyncSpy = spyOn(fs, 'appendFileSync')
-        appendFileSyncSpy.mockImplementation(jest.fn().mockReturnValue(null))
-        const execSyncSpy = spyOn(child_process, 'execSync')
+        appendFileSyncSpy.mockImplementation(jest.fn())
         execSyncSpy.mockImplementation(jest.fn().mockReturnValue(null))
     })
 
@@ -62,4 +64,21 @@ describe("Add alias", () => {
         }
         expect(caughtErr.code).toBe("commander.unknownCommand");
     });
+
+    test("Success on add alias", () => {
+        const program = new Command();
+        program.exitOverride()
+        addAlias(program)
+        program.parse(["node", "aliases", "add", "-n l", '-c exa -l']);
+        const alias = "alias  l=\" exa -l\""
+        const opts = program.commands[0].opts()
+        const name = opts.name.replace(" ", "")
+        const command = opts.command.replace(" ", "")
+
+        expect(name).toBe('l')
+        expect(command).toBe('exa -l')
+        expect(appendFileSyncSpy).toHaveBeenLastCalledWith(ALIASES_PATH, alias)
+        expect(execSyncSpy).toHaveBeenCalledTimes(1)
+        expect(execSyncSpy).toHaveBeenCalledWith(alias, { uid: UID })
+    })
 })
