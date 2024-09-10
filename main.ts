@@ -1,13 +1,12 @@
+#! /usr/bin/env bun
+
 import { Command } from "commander";
 import addAlias from "src/commands/add-alias";
 import listAlias from "src/commands/list-alias";
-import zshrcPrepare from "src/utils/zshrc-prepare";
 import packageInfo from "./package.json";
 
 
 const app = new Command()
-
-zshrcPrepare(app)
 
 app
   .name('aliases')

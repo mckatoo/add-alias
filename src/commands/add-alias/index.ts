@@ -33,7 +33,7 @@ export default (app: Command) => {
                     fs.appendFileSync(ALIASES_PATH, alias)
                 }
 
-                execSync(alias, { uid: UID })
+                process.stdout.write(alias)
             } catch (error) {
                 error instanceof Error && app.error(error.message)
             }

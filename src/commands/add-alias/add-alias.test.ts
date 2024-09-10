@@ -9,12 +9,14 @@ import { ALIASES_PATH, UID } from "src/utils/envs";
 const readFileSyncSpy = spyOn(fs, 'readFileSync')
 const appendFileSyncSpy = spyOn(fs, 'appendFileSync')
 const execSyncSpy = spyOn(child_process, 'execSync')
+const writeSpy = spyOn(process.stdout, 'write')
 
 describe("Add alias", () => {
     beforeAll(() => {
         readFileSyncSpy.mockImplementation(jest.fn().mockReturnValue(''))
         appendFileSyncSpy.mockImplementation(jest.fn())
         execSyncSpy.mockImplementation(jest.fn().mockReturnValue(null))
+        writeSpy.mockImplementation(jest.fn().mockReturnValue(''))
     })
 
     afterAll(() => {
@@ -78,7 +80,6 @@ describe("Add alias", () => {
         expect(name).toBe('l')
         expect(command).toBe('exa -l')
         expect(appendFileSyncSpy).toHaveBeenLastCalledWith(ALIASES_PATH, alias)
-        expect(execSyncSpy).toHaveBeenCalledTimes(1)
-        expect(execSyncSpy).toHaveBeenCalledWith(alias, { uid: UID })
+        expect(writeSpy).toHaveBeenCalledWith(alias)
     })
 })
