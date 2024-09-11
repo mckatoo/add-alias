@@ -2,7 +2,8 @@ import { execSync } from "child_process";
 import type { Command } from "commander";
 import fs from "fs";
 import readLine from "readline-sync";
-import { ALIASES_PATH, UID } from "src/utils/envs";
+import clog, { ClogColor } from "src/utils/clog";
+import { ALIASES_PATH, RELOAD_MESSAGE } from "src/utils/envs";
 
 
 export default (app: Command) => {
@@ -22,18 +23,20 @@ export default (app: Command) => {
                 const lastLineIsBlank = lastLine == ""
 
                 if (aliasesContent.includes(`alias ${name}=`) && !preview) {
-                    const update = readLine.keyInYN('This alias already exists. Do you want to update?') 
-                    if(!update) process.exit()
-                        execSync(`sed -i '/^alias ${name}=/d' ${ALIASES_PATH}`)
+                    const update = readLine.keyInYN('This alias already exists. Do you want to update?')
+                    if (!update) process.exit()
+                    execSync(`sed -i '/^alias ${name}=/d' ${ALIASES_PATH}`)
                 }
-                
+
                 if (!preview) {
                     !lastLineIsBlank && fs.appendFileSync(ALIASES_PATH, "\n")
                     fs.appendFileSync(ALIASES_PATH, alias)
                 }
                 execSync(`sed -i '/^$/d' ${ALIASES_PATH}`)
-                
-                process.stdout.write(alias)
+                clog(
+                    RELOAD_MESSAGE,
+                    ClogColor.yellow
+                )
             } catch (error) {
                 error instanceof Error && app.error(error.message)
             }

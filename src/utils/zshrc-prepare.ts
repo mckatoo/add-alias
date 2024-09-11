@@ -1,6 +1,6 @@
-import type { Command } from "commander"
 import fs from "fs"
-import { BKP_DIR, NOW, ZSHRC_PATH } from "./envs"
+import clog, { ClogColor } from "./clog"
+import { BKP_DIR, NOW, RELOAD_MESSAGE, ZSHRC_PATH } from "./envs"
 
 export default () => {
     const bkpDirExists = fs.existsSync(BKP_DIR)
@@ -22,7 +22,7 @@ export default () => {
         const content = `\n${header}\n${source}`
         if (!zshrcContent.includes(content)) {
             fs.appendFileSync(ZSHRC_PATH, content)
-            console.log('Reload the terminal for the changes to take effect')
+            clog(RELOAD_MESSAGE, ClogColor.yellow)
             process.exit()
         }
     } catch (error) {
