@@ -21,18 +21,18 @@ export default (app: Command) => {
                 const lastLine = lines[lines.length - 1]
                 const lastLineIsBlank = lastLine == ""
 
-                execSync(`sed -i '/^$/d' ${ALIASES_PATH}`)
                 if (aliasesContent.includes(`alias ${name}=`) && !preview) {
                     const update = readLine.keyInYN('This alias already exists. Do you want to update?') 
                     if(!update) process.exit()
-                    execSync(`sed -i '/^alias ${name}=/d' ${ALIASES_PATH}`)
+                        execSync(`sed -i '/^alias ${name}=/d' ${ALIASES_PATH}`)
                 }
-
+                
                 if (!preview) {
                     !lastLineIsBlank && fs.appendFileSync(ALIASES_PATH, "\n")
                     fs.appendFileSync(ALIASES_PATH, alias)
                 }
-
+                execSync(`sed -i '/^$/d' ${ALIASES_PATH}`)
+                
                 process.stdout.write(alias)
             } catch (error) {
                 error instanceof Error && app.error(error.message)
