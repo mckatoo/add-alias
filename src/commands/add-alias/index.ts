@@ -1,8 +1,8 @@
+import chalk from "chalk";
 import { execSync } from "child_process";
 import type { Command } from "commander";
 import fs from "fs";
 import readLine from "readline-sync";
-import clog, { ClogColor } from "src/utils/clog";
 import { ALIASES_PATH, RELOAD_MESSAGE } from "src/utils/envs";
 
 
@@ -33,10 +33,7 @@ export default (app: Command) => {
                     fs.appendFileSync(ALIASES_PATH, alias)
                 }
                 execSync(`sed -i '/^$/d' ${ALIASES_PATH}`)
-                clog(
-                    RELOAD_MESSAGE,
-                    ClogColor.yellow
-                )
+                console.log(`${chalk.yellow(`${RELOAD_MESSAGE} or execute ${chalk.underline('reload_aliases')} command.`)}`)
             } catch (error) {
                 error instanceof Error && app.error(error.message)
             }

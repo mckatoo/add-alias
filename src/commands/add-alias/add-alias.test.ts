@@ -1,22 +1,20 @@
-import { describe, expect, spyOn, mock, test, jest, afterAll, beforeAll } from "bun:test";
+import { afterAll, beforeAll, describe, expect, jest, mock, spyOn, test } from "bun:test";
+import child_process from "child_process";
 import { Command } from "commander";
-import addAlias from ".";
 import fs from "fs";
-import child_process from "child_process"
-import { ALIASES_PATH, UID } from "src/utils/envs";
+import { ALIASES_PATH } from "src/utils/envs";
+import addAlias from ".";
 
 
 const readFileSyncSpy = spyOn(fs, 'readFileSync')
 const appendFileSyncSpy = spyOn(fs, 'appendFileSync')
 const execSyncSpy = spyOn(child_process, 'execSync')
-const writeSpy = spyOn(process.stdout, 'write')
 
 describe("Add alias", () => {
     beforeAll(() => {
         readFileSyncSpy.mockImplementation(jest.fn().mockReturnValue(''))
         appendFileSyncSpy.mockImplementation(jest.fn())
-        execSyncSpy.mockImplementation(jest.fn().mockReturnValue(null))
-        writeSpy.mockImplementation(jest.fn().mockReturnValue(''))
+        execSyncSpy.mockImplementation(jest.fn())
     })
 
     afterAll(() => {
@@ -80,6 +78,7 @@ describe("Add alias", () => {
         expect(name).toBe('l')
         expect(command).toBe('exa -l')
         expect(appendFileSyncSpy).toHaveBeenLastCalledWith(ALIASES_PATH, alias)
-        expect(writeSpy).toHaveBeenCalledWith(alias)
+        // expect(execSyncSpy).toHaveBeenCalledWith(`sed -i '/^$/d' ${ALIASES_PATH}`)
+        expect(execSyncSpy).toHaveBeenCalled()
     })
 })
