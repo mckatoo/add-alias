@@ -1,4 +1,6 @@
-name: bun
+name: ci
+on: [pull_request]
+
 jobs:
   tests:
     name: link
