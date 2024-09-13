@@ -10,8 +10,8 @@ jobs:
       - uses: oven-sh/setup-bun@v2
 
       - run: bun install --ignore-scripts
-      - run: bun link
-      - run: bun link aliases
+      - run: bun link --ignore-scripts
+      - run: bun link aliases --ignore-scripts
       - run: aliases
 
     # name: tests
