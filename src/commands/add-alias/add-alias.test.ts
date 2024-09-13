@@ -1,14 +1,16 @@
 import { afterAll, beforeAll, describe, expect, jest, mock, spyOn, test } from "bun:test";
-import child_process from "child_process";
+import child_process, {execSync} from "child_process";
 import { Command } from "commander";
 import fs from "fs";
 import { ALIASES_PATH } from "src/utils/envs";
 import addAlias from ".";
+import readLine from "readline-sync";
 
 
 const readFileSyncSpy = spyOn(fs, 'readFileSync')
 const appendFileSyncSpy = spyOn(fs, 'appendFileSync')
 const execSyncSpy = spyOn(child_process, 'execSync')
+const keyInYNSpy = spyOn(readLine, 'keyInYN')
 
 describe("Add alias", () => {
     beforeAll(() => {
@@ -69,7 +71,7 @@ describe("Add alias", () => {
         const program = new Command();
         program.exitOverride()
         addAlias(program)
-        program.parse(["node", "aliases", "add", "-n l", '-c exa -l']);
+        program.parse(["node", "aliases", "add", "-n l", "-c exa -l"]);
         const alias = "alias  l=\" exa -l\""
         const opts = program.commands[0].opts()
         const name = opts.name.replace(" ", "")
@@ -78,7 +80,29 @@ describe("Add alias", () => {
         expect(name).toBe('l')
         expect(command).toBe('exa -l')
         expect(appendFileSyncSpy).toHaveBeenLastCalledWith(ALIASES_PATH, alias)
-        // expect(execSyncSpy).toHaveBeenCalledWith(`sed -i '/^$/d' ${ALIASES_PATH}`)
-        expect(execSyncSpy).toHaveBeenCalled()
+        expect(execSyncSpy).toHaveBeenCalledWith(`sed -i '/^$/d' ${ALIASES_PATH}`)
+    })
+
+    test("Success on update alias", () => {
+        readFileSyncSpy.mockImplementation(jest.fn().mockReturnValue('alias  l=\" exa -l\"'))
+        keyInYNSpy.mockImplementation(jest.fn().mockReturnValue(true))
+        const execSpy = spyOn(child_process, 'execSync')
+        execSpy.mockImplementation(jest.fn())
+
+        const program = new Command();
+        program.exitOverride()
+        addAlias(program)
+        program.parse(["node", "aliases", "add", "-n l", "-c exa -l"]);
+
+        const alias = 'alias  l=\" exa -l\"'
+        const opts = program.commands[0].opts()
+        const name = opts.name.replace(" ", "")
+        const command = opts.command.replace(" ", "")
+
+        expect(name).toBe('l')
+        expect(command).toBe('exa -l')
+        expect(appendFileSyncSpy).toHaveBeenLastCalledWith(ALIASES_PATH, alias)
+        expect(execSpy).toHaveBeenNthCalledWith(1, `sed -i '/^alias  ${name}=/d' ${ALIASES_PATH}`)
+        expect(execSpy).toHaveBeenLastCalledWith(`sed -i '/^$/d' ${ALIASES_PATH}`)
     })
 })
