@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, jest, mock, spyOn, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, jest, mock, spyOn, test } from "bun:test";
 import child_process, {execSync} from "child_process";
 import { Command } from "commander";
 import fs from "fs";
@@ -7,19 +7,24 @@ import addAlias from ".";
 import readLine from "readline-sync";
 
 
-const readFileSyncSpy = spyOn(fs, 'readFileSync')
-const appendFileSyncSpy = spyOn(fs, 'appendFileSync')
-const execSyncSpy = spyOn(child_process, 'execSync')
-const keyInYNSpy = spyOn(readLine, 'keyInYN')
+let readFileSyncSpy: any
+let appendFileSyncSpy: any
+let execSyncSpy: any
+let keyInYNSpy: any
 
 describe("Add alias", () => {
-    beforeAll(() => {
+    beforeEach(() => {
+        readFileSyncSpy = spyOn(fs, 'readFileSync')
+        appendFileSyncSpy = spyOn(fs, 'appendFileSync')
+        execSyncSpy = spyOn(child_process, 'execSync')
+        keyInYNSpy = spyOn(readLine, 'keyInYN')
+
         readFileSyncSpy.mockImplementation(jest.fn().mockReturnValue(''))
         appendFileSyncSpy.mockImplementation(jest.fn())
         execSyncSpy.mockImplementation(jest.fn())
     })
 
-    afterAll(() => {
+    afterEach(() => {
         mock.restore()
     })
 
@@ -86,8 +91,6 @@ describe("Add alias", () => {
     test("Success on update alias", () => {
         readFileSyncSpy.mockImplementation(jest.fn().mockReturnValue('alias  l=\" exa -l\"'))
         keyInYNSpy.mockImplementation(jest.fn().mockReturnValue(true))
-        const execSpy = spyOn(child_process, 'execSync')
-        execSpy.mockImplementation(jest.fn())
 
         const program = new Command();
         program.exitOverride()
@@ -102,7 +105,7 @@ describe("Add alias", () => {
         expect(name).toBe('l')
         expect(command).toBe('exa -l')
         expect(appendFileSyncSpy).toHaveBeenLastCalledWith(ALIASES_PATH, alias)
-        expect(execSpy).toHaveBeenNthCalledWith(1, `sed -i '/^alias  ${name}=/d' ${ALIASES_PATH}`)
-        expect(execSpy).toHaveBeenLastCalledWith(`sed -i '/^$/d' ${ALIASES_PATH}`)
+        expect(execSyncSpy).toHaveBeenNthCalledWith(1, `sed -i '/^alias  ${name}=/d' ${ALIASES_PATH}`)
+        expect(execSyncSpy).toHaveBeenLastCalledWith(`sed -i '/^$/d' ${ALIASES_PATH}`)
     })
 })
