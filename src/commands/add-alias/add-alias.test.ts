@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, jest, mock, spyOn, test } from "bun:test";
-import child_process, {execSync} from "child_process";
+import child_process from "child_process";
 import { Command } from "commander";
 import fs from "fs";
 import { ALIASES_PATH } from "src/utils/envs";
