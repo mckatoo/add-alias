@@ -45,14 +45,11 @@ describe("Add alias", () => {
     test("Unknown option, then handle error", () => {
         const program = new Command();
         program.exitOverride()
-        program
-            .exitOverride()
-            .command("add")
-            .action(() => { });
+        addAlias(program)
 
         let caughtErr: any;
         try {
-            program.parse(["node", "aliases", "add", "--color"]);
+            program.parse(["node", "aliases", "add", "-n l", "-c exa", "--color"]);
         } catch (err) {
             caughtErr = err;
         }
