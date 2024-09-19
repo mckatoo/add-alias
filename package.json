@@ -1,10 +1,15 @@
 {
-  "name": "aliases",
+  "name": "shell-aliases",
   "module": "main.ts",
   "version": "0.0.1",
   "type": "module",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
   "scripts": {
-    "postinstall": "bun run ./prepare.ts"
+    "build": "bun build --target=node ./prepare.ts --outfile=dist/prepare.js && bun build --target=node ./main.ts --outfile=dist/main.js && bun run build:declaration",
+    "build:declaration": "tsc --emitDeclarationOnly --project tsconfig.types.json",
+    "postbuild": "rimraf tsconfig.types.tsbuildinfo",
+    "postinstall": "bun run ./prepare.js"
   },
   "bin": {
     "aliases": "./main.ts"
@@ -16,9 +21,14 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/readline-sync": "^1.4.8"
+    "@types/readline-sync": "^1.4.8",
+    "rimraf": "^6.0.1"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
-  }
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts"
+  ]
 }

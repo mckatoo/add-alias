@@ -1,3 +1,3 @@
-import zshrcPrepare from "src/utils/zshrc-prepare";
+import rcFilePrepare from "src/utils/shell-rc-prepare";
 
-zshrcPrepare()
+rcFilePrepare()

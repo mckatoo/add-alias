@@ -1,7 +1,9 @@
 import { homedir } from "os";
 
 
-export const ZSHRC_PATH = `${homedir}/.zshrc`
+const SHELL = process.env.SHELL?.replace('/bin/', '')
+export const RC_FILE = SHELL == 'zsh' ? '.zshrc' : '.bashrc'
+export const RC_FILE_PATH = `${homedir}/${RC_FILE}`
 export const ALIASES_PATH = `${homedir}/.aliases`
 
 export const DATE = new Date()

@@ -3,18 +3,19 @@
 import { Command } from "commander";
 import addAlias from "src/commands/add-alias";
 import listAlias from "src/commands/list-alias";
-import packageInfo from "./package.json";
 import rmAlias from "src/commands/rm-alias";
-import zshrcPrepare from "src/utils/zshrc-prepare";
+import { RC_FILE } from "src/utils/envs";
+import rcFilePrepare from "src/utils/shell-rc-prepare";
+import packageInfo from "./package.json";
 
 
-zshrcPrepare()
+rcFilePrepare()
 
 const app = new Command()
 
 app
   .name('aliases')
-  .description('CLI add alias on .zshrc')
+  .description(`CLI add alias on ${RC_FILE}`)
   .version(packageInfo.version)
 
 addAlias(app)
